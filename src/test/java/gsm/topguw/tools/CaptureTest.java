@@ -1,4 +1,4 @@
-/* ScannerTest.java - 15 janv. 2016  -  UTF-8 - 
+/* CaptureTest.java - 15 janv. 2016  -  UTF-8 - 
  * --------------------------------- DISCLAMER ---------------------------------
  * Copyright (c) 2015, Bastien Enjalbert All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -29,7 +29,9 @@ package gsm.topguw.tools;
 
 import gsm.topguw.conf.RtlsdrConf;
 import gsm.topguw.generality.Cell;
-import java.util.ArrayList;
+import gsm.topguw.err.RtlsdrError;
+import java.io.File;
+import java.io.IOException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -41,42 +43,49 @@ import static org.junit.Assert.*;
  *
  * @author root
  */
-public class ScannerTest {
-    
+public class CaptureTest {
+
     public static void main(String[] args) {
-        testScanForCell();
+        testCaptureCell();
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
 
     /**
-     * Test of scanForCell method, of class Scanner.
+     * Test of captureCell method, of class Capture.
      */
     @Test
-    public static void testScanForCell() {
-        System.out.println("scanForCell");
-        String whichGsm = "GSM900";
-        RtlsdrConf conf = new RtlsdrConf();
-        ArrayList<Cell> result = Scanner.scanForCell(whichGsm, conf);
-        result.stream().forEach((aCell) -> {
-            System.out.println(aCell.toString());
-        });
+    public static void testCaptureCell() {
+        try {
+            System.out.println("captureCell");
+            File dest = new File("/tmp/sniffing-capturing.test");
+            RtlsdrConf conf = new RtlsdrConf();
+            Cell cell = new Cell("937762116", 82, "GSM900", "0");
+            int[] options = {0, 1};
+            Process result = Capture.captureCell(dest, conf, cell, options);
+            // capturing 5 seconds
+            Thread.sleep(15000);
+            // close process <=> stop sniffing
+            result.destroy();
+            result.destroyForcibly();
+        } catch (RtlsdrError | IOException | InterruptedException e) {
+            System.err.println(e);
+        }
+
     }
 
-
-    
 }

@@ -1,4 +1,4 @@
-/* ScannerTest.java - 15 janv. 2016  -  UTF-8 - 
+/* Channels.java - 15 janv. 2016  -  UTF-8 - 
  * --------------------------------- DISCLAMER ---------------------------------
  * Copyright (c) 2015, Bastien Enjalbert All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -25,58 +25,41 @@
  * policies, either expressed or implied, of the FreeBSD Project.
  * @author Bastien Enjalbert
  */
-package gsm.topguw.tools;
+package gsm.topguw.channels;
 
-import gsm.topguw.conf.RtlsdrConf;
-import gsm.topguw.generality.Cell;
+import gsm.topguw.generality.Frame;
 import java.util.ArrayList;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
- *
+ * Channels implementation for gr-gsm and uses
  * @author root
  */
-public class ScannerTest {
+public abstract class Channels {
     
-    public static void main(String[] args) {
-        testScanForCell();
-    }
+    /** Channels type */
+    protected String chanType;
     
-    @BeforeClass
-    public static void setUpClass() {
-    }
+    /** Channels timeslot */
+    protected int timeslot;
     
-    @AfterClass
-    public static void tearDownClass() {
-    }
+    /** Channels subslot */
+    protected int subslot;
     
-    @Before
-    public void setUp() {
-    }
+    /** Initialized data into Array */
+    protected ArrayList<Frame> recordedFrames;
     
-    @After
-    public void tearDown() {
-    }
-
     /**
-     * Test of scanForCell method, of class Scanner.
+     * Return a channel to work on
+     * @param chanType the channel type
+     * @param timeslot the timeslot
+     * @param subslot the sub-slot
+     * @return an empty version of the channels (without data)
      */
-    @Test
-    public static void testScanForCell() {
-        System.out.println("scanForCell");
-        String whichGsm = "GSM900";
-        RtlsdrConf conf = new RtlsdrConf();
-        ArrayList<Cell> result = Scanner.scanForCell(whichGsm, conf);
-        result.stream().forEach((aCell) -> {
-            System.out.println(aCell.toString());
-        });
-    }
-
-
+    public abstract Channels decoder(String chanType, int timeslot, int subslot);
+    
+    /**
+     * Get all frame from the channel
+     */
+    public abstract void start();
     
 }

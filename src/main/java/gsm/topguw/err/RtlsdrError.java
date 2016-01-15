@@ -1,4 +1,4 @@
-/* ScannerTest.java - 15 janv. 2016  -  UTF-8 - 
+/* RtlsdrError.java
  * --------------------------------- DISCLAMER ---------------------------------
  * Copyright (c) 2015, Bastien Enjalbert All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -25,58 +25,21 @@
  * policies, either expressed or implied, of the FreeBSD Project.
  * @author Bastien Enjalbert
  */
-package gsm.topguw.tools;
 
-import gsm.topguw.conf.RtlsdrConf;
-import gsm.topguw.generality.Cell;
-import java.util.ArrayList;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+package gsm.topguw.err;
 
 /**
- *
- * @author root
+ * Classics errors from rtl_sdr commands
+ * @author bastien.enjalbert
  */
-public class ScannerTest {
-    
-    public static void main(String[] args) {
-        testScanForCell();
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
+public class RtlsdrError extends Exception{
 
-    /**
-     * Test of scanForCell method, of class Scanner.
-     */
-    @Test
-    public static void testScanForCell() {
-        System.out.println("scanForCell");
-        String whichGsm = "GSM900";
-        RtlsdrConf conf = new RtlsdrConf();
-        ArrayList<Cell> result = Scanner.scanForCell(whichGsm, conf);
-        result.stream().forEach((aCell) -> {
-            System.out.println(aCell.toString());
-        });
+    public RtlsdrError() {
+        super("");
     }
-
-
+    
+    public RtlsdrError(String err) {
+        super(err);
+    }
     
 }

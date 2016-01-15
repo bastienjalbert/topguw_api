@@ -1,4 +1,4 @@
-/* ScannerTest.java - 15 janv. 2016  -  UTF-8 - 
+/* NonCombined.java - 15 janv. 2016  -  UTF-8 - 
  * --------------------------------- DISCLAMER ---------------------------------
  * Copyright (c) 2015, Bastien Enjalbert All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -25,58 +25,46 @@
  * policies, either expressed or implied, of the FreeBSD Project.
  * @author Bastien Enjalbert
  */
-package gsm.topguw.tools;
-
-import gsm.topguw.conf.RtlsdrConf;
-import gsm.topguw.generality.Cell;
-import java.util.ArrayList;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+package gsm.topguw.channels;
 
 /**
- *
- * @author root
+ * BCCH_SDCCH4 (Combined C0) Channel
+ * @author bastien.enjalbert
  */
-public class ScannerTest {
-    
-    public static void main(String[] args) {
-        testScanForCell();
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
+public class Combined extends Channels{
 
     /**
-     * Test of scanForCell method, of class Scanner.
+     * Create an abstract version of a BCCH_SDCCH4 (Combined channel C0) without any
+     * data inside.
+     * @param chanType The channel type
+     * @param timeslot The timeslot
+     * @param subslot The sub-slot
      */
-    @Test
-    public static void testScanForCell() {
-        System.out.println("scanForCell");
-        String whichGsm = "GSM900";
-        RtlsdrConf conf = new RtlsdrConf();
-        ArrayList<Cell> result = Scanner.scanForCell(whichGsm, conf);
-        result.stream().forEach((aCell) -> {
-            System.out.println(aCell.toString());
-        });
+    public Combined(String chanType, int timeslot, int subslot) {
+        this.chanType = chanType;
+        this.timeslot = timeslot;
+        this.subslot = subslot;
+        this.recordedFrames = null;
     }
-
-
+    
+    /**
+     * Initialize BCCH_SDCCH4 channel without data
+     * @param chanType
+     * @param timeslot
+     * @param subslot
+     * @return an empty BCCH_SDCCH4 that wait to be filled (start method)
+     */
+    @Override
+    public Channels decoder(String chanType, int timeslot, int subslot) {
+        return new Combined(chanType, timeslot, subslot);
+    }
+    
+    /**
+     * Get all frame from the channel (BCCH_SDCCH4)
+     */
+    @Override
+    public void start() {
+        // TODO : use airprobe_decode.py with a cell, a capture file and rtlsdrconf
+    }
     
 }

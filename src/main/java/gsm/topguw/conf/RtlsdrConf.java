@@ -29,9 +29,18 @@ package gsm.topguw.conf;
 
 /**
  * Add or get the current rtl-sdr dongle configuration for gr-gsm
- * @author bastien enjalbert
+ * @author bastien.enjalbert
  */
 public class RtlsdrConf {
+    
+    /** default ppm */
+    public int DEFAULT_PPM = 0;
+    
+    /** default samplerate */
+    public int DEFAULT_SPRT = 1000000;
+    
+    /** default gain */
+    public int DEFAULT_GAIN = 15;
     
     /** frequency correction (ppm) */
     private int ppm;
@@ -52,6 +61,15 @@ public class RtlsdrConf {
         this.ppm = ppm;
         this.samprate = samplerate;
         this.gain = gain;
+    }
+    
+    /**
+     * Create a configuration with default setting
+     */
+    public RtlsdrConf() {
+        this.ppm = DEFAULT_PPM;
+        this.samprate = DEFAULT_SPRT;
+        this.gain = DEFAULT_GAIN;
     }
     
     public int getPpm() {

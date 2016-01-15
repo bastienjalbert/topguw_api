@@ -1,4 +1,4 @@
-/* RtlsdrError.java
+/* Decoder.java - 15 janv. 2016  -  UTF-8 - 
  * --------------------------------- DISCLAMER ---------------------------------
  * Copyright (c) 2015, Bastien Enjalbert All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -25,21 +25,15 @@
  * policies, either expressed or implied, of the FreeBSD Project.
  * @author Bastien Enjalbert
  */
-
-package gsm.topguw.rtlerr;
+package gsm.topguw.tools;
 
 /**
- * Classics errors from rtl_sdr commands
- * @author root
+ * Decode cfile/bursts file with gr-gsm
+ *
+ * @author bastien.enjalbert
  */
-public class RtlsdrError extends Exception{
-
-    public RtlsdrError() {
-        super("");
-    }
+public class Decoder {
     
-    public RtlsdrError(String err) {
-        super(err);
-    }
+    
     
 }

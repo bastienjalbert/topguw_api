@@ -32,7 +32,7 @@ import java.util.List;
 
 /**
  * Cell information (band, frequency, arfcn, power)s
- * @author bastien enjalbert
+ * @author bastie.enjalbert
  */
 public class Cell {
     
@@ -43,20 +43,20 @@ public class Cell {
     /**
      * frequency (in Hz)
      */
-    private final String freq;
+    private String freq;
 
     /**
      * ARFCN
      */
-    private final int arfcn;
+    private int arfcn;
     
     /**
      * Intensity, power
      */
-    private final String power;
+    private String power;
     
     /** GSM Band */
-    private final String band;
+    private String band;
 
     /**
      * Create a cell without any information
@@ -109,8 +109,64 @@ public class Cell {
      */
     @Override
     public String toString() {
-        return "band : " + this.band + ", freq : " + this.freq + ", arfcn : " 
-                + this.arfcn + ", power : " + this.power;
+        return "band : " + this.getBand() + ", freq : " + this.getFreq() + ", arfcn : " 
+                + this.getArfcn() + ", power : " + this.getPower();
+    }
+
+    /**
+     * @return the freq
+     */
+    public String getFreq() {
+        return freq;
+    }
+
+    /**
+     * @param freq the freq to set
+     */
+    public void setFreq(String freq) {
+        this.freq = freq;
+    }
+
+    /**
+     * @return the arfcn
+     */
+    public int getArfcn() {
+        return arfcn;
+    }
+
+    /**
+     * @param arfcn the arfcn to set
+     */
+    public void setArfcn(int arfcn) {
+        this.arfcn = arfcn;
+    }
+
+    /**
+     * @return the power
+     */
+    public String getPower() {
+        return power;
+    }
+
+    /**
+     * @param power the power to set
+     */
+    public void setPower(String power) {
+        this.power = power;
+    }
+
+    /**
+     * @return the band
+     */
+    public String getBand() {
+        return band;
+    }
+
+    /**
+     * @param band the band to set
+     */
+    public void setBand(String band) {
+        this.band = band;
     }
     
 }

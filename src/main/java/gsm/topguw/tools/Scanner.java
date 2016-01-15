@@ -28,7 +28,7 @@
 package gsm.topguw.tools;
 import gsm.topguw.conf.RtlsdrConf;
 import gsm.topguw.generality.Cell;
-import gsm.topguw.rtlerr.RtlsdrError;
+import gsm.topguw.err.RtlsdrError;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -51,7 +51,7 @@ public class Scanner {
      * @return an arraylist that might contain found cell 
      * or null if an error happen
      */
-    public ArrayList<Cell> scanForCell(String whichGsm, RtlsdrConf conf) {
+    public static ArrayList<Cell> scanForCell(String whichGsm, RtlsdrConf conf) {
         // scan choice (=> only kalibrate-rtl test available now ...)
         try {
             return getGsmCells(whichGsm, conf);
@@ -70,7 +70,7 @@ public class Scanner {
      * group 3 freq type (- or +) group 4 freq correction group 5 power
      */
     public static Pattern RGX_KAL
-            = Pattern.compile(".*chan: ([0-9])* \\(([0-9]*.[0-9]*)MHz (-+) ([0-9]*.[0-9]*)kHz\\)	power: ([0-9]*.[0-9]*)");
+            = Pattern.compile(".*chan: ([0-9]*) \\(([0-9]*.[0-9]*)MHz (-+) ([0-9]*.[0-9]*)kHz\\)	power: ([0-9]*.[0-9]*)");
 
     /**
      * Start kalibrate-rtl (kal) to get GSM tower
@@ -86,18 +86,10 @@ public class Scanner {
                                                throws RtlsdrError, IOException {
         // Will contains gsm cells found
         ArrayList<Cell> gsmCells = new ArrayList<>();
-        
-        // ppm error 
-        String ppm;
-        
-        if(conf.getPpm() == -1) {
-            ppm = "0";
-        } else {
-            ppm = Integer.toString(conf.getPpm());
-        }
 
         // start the kal command
-        ProcessBuilder pb = new ProcessBuilder("kal", "-s", whichGsm, "-g", Integer.toString(conf.getGain()), "-e", ppm);
+        ProcessBuilder pb = new ProcessBuilder("kal", "-s", whichGsm, "-g", 
+                Integer.toString(conf.getGain()), "-e", Integer.toString(conf.getPpm()));
         pb.redirectErrorStream(true);
         Process p = pb.start();
 

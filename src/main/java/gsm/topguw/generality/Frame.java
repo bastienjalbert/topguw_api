@@ -1,4 +1,4 @@
-/* ScannerTest.java - 15 janv. 2016  -  UTF-8 - 
+/* Frame.java - 15 janv. 2016  -  UTF-8 - 
  * --------------------------------- DISCLAMER ---------------------------------
  * Copyright (c) 2015, Bastien Enjalbert All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -25,58 +25,75 @@
  * policies, either expressed or implied, of the FreeBSD Project.
  * @author Bastien Enjalbert
  */
-package gsm.topguw.tools;
-
-import gsm.topguw.conf.RtlsdrConf;
-import gsm.topguw.generality.Cell;
-import java.util.ArrayList;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+package gsm.topguw.generality;
 
 /**
- *
- * @author root
+ * Frame implementation (data and place)
+ * @author bastien.enjalbert
  */
-public class ScannerTest {
+public class Frame {
     
-    public static void main(String[] args) {
-        testScanForCell();
-    }
+    /** frame number */
+    private int fn;
     
-    @BeforeClass
-    public static void setUpClass() {
-    }
+    /** frame number (a5/1) */
+    private int fna51;
     
-    @AfterClass
-    public static void tearDownClass() {
-    }
+    /** frame data */
+    private String[] data;
     
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+    /**
+     * Create a frame
+     * @param fn the frame number of the frame
+     * @param fna51 the a5/1 version of frame number
+     * @param data frame data (hexadecimal, not burst)
+     */
+    public Frame(int fn, int fna51, String[] data) {
+        this.fn = fn;
+        this.fna51 = fna51;
+        this.data = data;        
     }
 
     /**
-     * Test of scanForCell method, of class Scanner.
+     * @return the fn
      */
-    @Test
-    public static void testScanForCell() {
-        System.out.println("scanForCell");
-        String whichGsm = "GSM900";
-        RtlsdrConf conf = new RtlsdrConf();
-        ArrayList<Cell> result = Scanner.scanForCell(whichGsm, conf);
-        result.stream().forEach((aCell) -> {
-            System.out.println(aCell.toString());
-        });
+    public int getFn() {
+        return fn;
     }
 
+    /**
+     * @param fn the fn to set
+     */
+    public void setFn(int fn) {
+        this.fn = fn;
+    }
 
+    /**
+     * @return the fna51
+     */
+    public int getFna51() {
+        return fna51;
+    }
+
+    /**
+     * @param fna51 the fna51 to set
+     */
+    public void setFna51(int fna51) {
+        this.fna51 = fna51;
+    }
+
+    /**
+     * @return the data
+     */
+    public String[] getData() {
+        return data;
+    }
+
+    /**
+     * @param data the data to set
+     */
+    public void setData(String[] data) {
+        this.data = data;
+    }
     
 }
