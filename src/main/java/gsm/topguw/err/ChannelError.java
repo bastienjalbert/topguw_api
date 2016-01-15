@@ -1,4 +1,4 @@
-/* Decoder.java - 15 janv. 2016  -  UTF-8 - 
+/* ChannelError.java - 15 janv. 2016  -  UTF-8 - 
  * --------------------------------- DISCLAMER ---------------------------------
  * Copyright (c) 2015, Bastien Enjalbert All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -25,37 +25,20 @@
  * policies, either expressed or implied, of the FreeBSD Project.
  * @author Bastien Enjalbert
  */
-package gsm.topguw.tools;
-
-import gsm.topguw.channels.Channels;
-import gsm.topguw.err.ChannelError;
-import java.util.HashMap;
+package gsm.topguw.err;
 
 /**
- * Decode cfile/bursts file with gr-gsm
  *
- * @author bastien.enjalbert
+ * @author root
  */
-public class Decoder {
-    
-    /** List of available channels */
-    HashMap<String, Channels> availableChan = new HashMap<>();
+public class ChannelError extends Exception{
     
     /**
-     * Get a channel to work with
-     * @param chanType the channel type to decode
-     * @param timeslot the timeslot 
-     * @param subslot the subslot
-     * @return the channel frames and information
-     * @throws ChannelError if the argument channel type isn't available/supported
+     * Channel specific error
+     * @param err the error
      */
-    public Channels decoder(String chanType, int timeslot, int subslot) 
-            throws ChannelError {
-        if(!availableChan.containsKey(chanType)) {
-            throw new ChannelError("Channel type isn't supported");
-        }
-        Channels channel = decoder(chanType, timeslot, subslot);
-        return channel;
-        /// TODO : 
+    public ChannelError(String err) {
+        super(err);
     }
+    
 }
