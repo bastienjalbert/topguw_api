@@ -50,12 +50,11 @@ public abstract class Channels {
     
     /**
      * Return a channel to work on
-     * @param chanType the channel type
      * @param timeslot the timeslot
      * @param subslot the sub-slot
      * @return an empty version of the channels (without data)
      */
-    public abstract Channels decoder(String chanType, int timeslot, int subslot);
+    public abstract Channels decoder(int timeslot, int subslot);
     
     /**
      * Get all frame from the channel

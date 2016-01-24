@@ -56,6 +56,6 @@ public class Decoder {
         }
         Channels channel = decoder(chanType, timeslot, subslot);
         return channel;
-        /// TODO : 
+        /// TODO : réflécheir, il ne faut pas spécifié le channel dans chanType normalement !!!
     }
 }

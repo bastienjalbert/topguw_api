@@ -34,7 +34,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,10 +69,11 @@ public class Scanner {
      * group 3 freq type (- or +) group 4 freq correction group 5 power
      */
     public static Pattern RGX_KAL
-            = Pattern.compile(".*chan: ([0-9]*) \\(([0-9]*.[0-9]*)MHz (-+) ([0-9]*.[0-9]*)kHz\\)	power: ([0-9]*.[0-9]*)");
+            = Pattern.compile(".*chan: ([0-9]*) \\(([0-9]*.[0-9]*)MHz (-+)"
+                        + " ([0-9]*.[0-9]*)kHz\\)	power: ([0-9]*.[0-9]*)");
 
     /**
-     * Start kalibrate-rtl (kal) to get GSM tower
+     * Start kalibrate-rtl (kal) to get GSM CELLS
      *
      * @param whichGsm GSM type (900, 1800, ..)
      * @param conf the rtl_sdr configuration 
