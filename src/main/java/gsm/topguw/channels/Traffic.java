@@ -46,13 +46,23 @@ public class Traffic extends Channels{
     }
     
     /**
+     * Create an abstract version of a TCHF (Traffic Channel, Full rate) without any
+     * data inside.
+     */
+    public Traffic() {
+        this.timeslot = -1;
+        this.subslot = -1;
+        this.recordedFrames = null;
+    }
+    
+    /**
      * Initialize TCHF channel without data
      * @param timeslot
      * @param subslot
      * @return an empty TCHF that wait to be filled (start method)
      */
     @Override
-    public Channels decoder(int timeslot, int subslot) {
+    public Channels decode(int timeslot, int subslot) {
         return new NonCombined(timeslot, subslot);
     }
     

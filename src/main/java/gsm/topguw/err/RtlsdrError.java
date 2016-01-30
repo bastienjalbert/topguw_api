@@ -35,7 +35,7 @@ package gsm.topguw.err;
 public class RtlsdrError extends Exception{
 
     public RtlsdrError() {
-        super("");
+        super("An unknow error have been catched from RTL-SDR device");
     }
     
     public RtlsdrError(String err) {

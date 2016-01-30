@@ -46,13 +46,23 @@ public class Combined extends Channels{
     }
     
     /**
+     * Create an abstract version of a BCCH_SDCCH4 (Combined channel C0) without any
+     * data inside.
+     */
+    public Combined() {
+        this.timeslot = -1;
+        this.subslot = -1;
+        this.recordedFrames = null;
+    }
+    
+    /**
      * Initialize BCCH_SDCCH4 channel without data
      * @param timeslot
      * @param subslot
      * @return an empty BCCH_SDCCH4 that wait to be filled (start method)
      */
     @Override
-    public Channels decoder(int timeslot, int subslot) {
+    public Channels decode(int timeslot, int subslot) {
         return new Combined(timeslot, subslot);
     }
     

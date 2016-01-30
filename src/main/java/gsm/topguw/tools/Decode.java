@@ -1,4 +1,4 @@
-/* Decoder.java - 15 janv. 2016  -  UTF-8 - 
+/* Decode.java - 15 janv. 2016  -  UTF-8 - 
  * --------------------------------- DISCLAMER ---------------------------------
  * Copyright (c) 2015, Bastien Enjalbert All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -27,7 +27,7 @@
  */
 package gsm.topguw.tools;
 
-import gsm.topguw.channels.Channels;
+import gsm.topguw.channels.*;
 import gsm.topguw.err.ChannelError;
 import java.util.HashMap;
 
@@ -36,10 +36,19 @@ import java.util.HashMap;
  *
  * @author bastien.enjalbert
  */
-public class Decoder {
+public class Decode {
     
-    /** List of available channels */
+    /** List of available channels where we can decode frames*/
     HashMap<String, Channels> availableChan = new HashMap<>();
+    
+    /**
+     * Register channel type
+     * @param T the name of the channel
+     * @param C the channel instance
+     */
+    public void registerChannel(String T, Channels C) {
+        availableChan.put(T, C);
+    }
     
     /**
      * Get a channel to work with
@@ -49,13 +58,35 @@ public class Decoder {
      * @return the channel frames and information
      * @throws ChannelError if the argument channel type isn't available/supported
      */
-    public Channels decoder(String chanType, int timeslot, int subslot) 
+    public Channels getChannel(String chanType, int timeslot, int subslot) 
             throws ChannelError {
+        registerChannel("combined", new Combined());
+        registerChannel("noncombined", new NonCombined());
+        registerChannel("standalonecontrol", new StandaloneControl());
+        registerChannel("traffic", new Traffic());
         if(!availableChan.containsKey(chanType)) {
             throw new ChannelError("Channel type isn't supported");
         }
-        Channels channel = decoder(chanType, timeslot, subslot);
-        return channel;
-        /// TODO : réflécheir, il ne faut pas spécifié le channel dans chanType normalement !!!
+        return availableChan.get(chanType).decode(timeslot, subslot);
+    }
+    
+     /**
+     * Get channel's frame
+     * @param chanType the channel type to decode
+     * @param timeslot the timeslot 
+     * @param subslot the subslot
+     * @return the channel frames and information
+     * @throws ChannelError if the argument channel type isn't available/supported
+     */
+    public Channels getChannelFrame(String chanType, int timeslot, int subslot) 
+            throws ChannelError {
+        registerChannel("combined", new Combined());
+        registerChannel("noncombined", new NonCombined());
+        registerChannel("standalonecontrol", new StandaloneControl());
+        registerChannel("traffic", new Traffic());
+        if(!availableChan.containsKey(chanType)) {
+            throw new ChannelError("Channel type isn't supported");
+        }
+        return availableChan.get(chanType).decode(timeslot, subslot);
     }
 }

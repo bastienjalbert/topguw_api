@@ -46,13 +46,23 @@ public class NonCombined extends Channels{
     }
     
     /**
+     * Create an abstract version of a BCCH (Non-Combined channel C0) without any
+     * data inside.
+     */
+    public NonCombined() {
+        this.timeslot = -1;
+        this.subslot = -1;
+        this.recordedFrames = null;
+    }
+    
+    /**
      * Initialize BCCH channel without data
      * @param timeslot
      * @param subslot
      * @return an empty BCCH that wait to be filled (start method)
      */
     @Override
-    public Channels decoder(int timeslot, int subslot) {
+    public Channels decode(int timeslot, int subslot) {
         return new NonCombined(timeslot, subslot);
     }
     

@@ -46,13 +46,23 @@ public class StandaloneControl extends Channels{
     }
     
     /**
+     * Create an abstract version of a SDCCH8 (Stand-alone control channel) without any
+     * data inside.
+     */
+    public StandaloneControl() {
+        this.timeslot = -1;
+        this.subslot = -1;
+        this.recordedFrames = null;
+    }
+    
+    /**
      * Initialize SDCCH8 channel without data
      * @param timeslot
      * @param subslot
      * @return an empty SDCCH8 that wait to be filled (start method)
      */
     @Override
-    public Channels decoder(int timeslot, int subslot) {
+    public Channels decode(int timeslot, int subslot) {
         return new NonCombined(timeslot, subslot);
     }
     

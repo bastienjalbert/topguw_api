@@ -35,9 +35,7 @@ import java.util.ArrayList;
  * @author root
  */
 public abstract class Channels {
-    
-    /** Channels type */
-    protected String chanType;
+   
     
     /** Channels timeslot */
     protected int timeslot;
@@ -54,7 +52,7 @@ public abstract class Channels {
      * @param subslot the sub-slot
      * @return an empty version of the channels (without data)
      */
-    public abstract Channels decoder(int timeslot, int subslot);
+    public abstract Channels decode(int timeslot, int subslot);
     
     /**
      * Get all frame from the channel
