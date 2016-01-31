@@ -1,4 +1,4 @@
-/* Frame.java - 15 janv. 2016  -  UTF-8 - 
+/* DecodeTest.java - 31 janv. 2016  -  UTF-8 - 
  * --------------------------------- DISCLAMER ---------------------------------
  * Copyright (c) 2015, Bastien Enjalbert All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -25,87 +25,43 @@
  * policies, either expressed or implied, of the FreeBSD Project.
  * @author Bastien Enjalbert
  */
-package gsm.topguw.generality;
+package gsm.topguw.tools;
 
-import java.util.Arrays;
+import gsm.topguw.channels.Channels;
+import gsm.topguw.conf.RtlsdrConf;
+import gsm.topguw.err.ChannelError;
+import gsm.topguw.generality.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
- * Frame implementation (data and place)
- * @author bastien.enjalbert
+ *
+ * @author root
  */
-public class Frame {
-    
-    /** frame number */
-    private int fn;
-    
-    /** frame number (a5/1) */
-    private int fna51;
-    
-    /** frame data */
-    private String[] data;
-    
-    /**
-     * Create a frame
-     * @param fn the frame number of the frame
-     * @param fna51 the a5/1 version of frame number
-     * @param data frame data (hexadecimal, not burst)
-     */
-    public Frame(int fn, int fna51, String[] data) {
-        this.fn = fn;
-        this.fna51 = fna51;
-        this.data = data;        
-    }
-    
-    /**
-     * toString
-     * @return the string representation of the frame
-     */
-    @Override
-    public String toString() {
-        return Integer.toString(fn) + " " + Integer.toString(fna51) + " " + 
-                Arrays.toString(data);
-    }
-    
-    /**
-     * @return the fn
-     */
-    public int getFn() {
-        return fn;
+public class DecodeTest {
+
+    public static void main(String[] args) {
+        // cell
+        Cell cell = new Cell("951360000", 121, "GSM900", "152200");
+        // rtl conf
+        RtlsdrConf conf = new RtlsdrConf(0, 1000000, 0);
+
+        // channel
+        Channels broadcast = null;
+
+        Decode dec = new Decode();
+
+        try {
+            broadcast = dec.getChannel("combined", 0, 0, new File("/root/Bureau/temp/test2.cfile"));
+            broadcast.start(cell, conf, new String[0]);
+            for(Frame a : broadcast.getRecordedFrames()) {
+                System.out.println(a.toString() + "\n");
+            }
+        } catch (IOException | ChannelError e) {
+            System.err.println(e.getMessage());
+        }
+        
+        
     }
 
-    /**
-     * @param fn the fn to set
-     */
-    public void setFn(int fn) {
-        this.fn = fn;
-    }
-
-    /**
-     * @return the fna51
-     */
-    public int getFna51() {
-        return fna51;
-    }
-
-    /**
-     * @param fna51 the fna51 to set
-     */
-    public void setFna51(int fna51) {
-        this.fna51 = fna51;
-    }
-
-    /**
-     * @return the data
-     */
-    public String[] getData() {
-        return data;
-    }
-
-    /**
-     * @param data the data to set
-     */
-    public void setData(String[] data) {
-        this.data = data;
-    }
-    
 }

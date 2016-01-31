@@ -96,4 +96,7 @@ public class RtlsdrConf {
         this.samprate = samprate;
     }
     
+    public String getSamprateStr() {
+        return Long.toString(samprate);
+    }
 }

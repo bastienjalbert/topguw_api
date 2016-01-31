@@ -28,7 +28,11 @@
 package gsm.topguw.tools;
 
 import gsm.topguw.channels.*;
+import gsm.topguw.conf.RtlsdrConf;
 import gsm.topguw.err.ChannelError;
+import gsm.topguw.generality.Cell;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -37,56 +41,59 @@ import java.util.HashMap;
  * @author bastien.enjalbert
  */
 public class Decode {
-    
-    /** List of available channels where we can decode frames*/
-    HashMap<String, Channels> availableChan = new HashMap<>();
-    
+
+    /**
+     * List of available channels where we can decode frames
+     */
+    public static HashMap<String, Channels> availableChan = new HashMap<>();
+
     /**
      * Register channel type
+     *
      * @param T the name of the channel
      * @param C the channel instance
      */
-    public void registerChannel(String T, Channels C) {
+    public static void registerChannel(String T, Channels C) {
         availableChan.put(T, C);
     }
-    
+
     /**
      * Get a channel to work with
+     *
      * @param chanType the channel type to decode
-     * @param timeslot the timeslot 
+     * @param timeslot the timeslot
      * @param subslot the subslot
+     * @param cfile the linked cfile to the channel
      * @return the channel frames and information
-     * @throws ChannelError if the argument channel type isn't available/supported
+     * @throws ChannelError if the argument channel type isn't
+     * available/supported
      */
-    public Channels getChannel(String chanType, int timeslot, int subslot) 
+    public Channels getChannel(String chanType, int timeslot, int subslot, File cfile)
             throws ChannelError {
         registerChannel("combined", new Combined());
         registerChannel("noncombined", new NonCombined());
         registerChannel("standalonecontrol", new StandaloneControl());
         registerChannel("traffic", new Traffic());
-        if(!availableChan.containsKey(chanType)) {
+        if (!availableChan.containsKey(chanType)) {
             throw new ChannelError("Channel type isn't supported");
         }
-        return availableChan.get(chanType).decode(timeslot, subslot);
+        return availableChan.get(chanType).decode(timeslot, subslot, cfile);
     }
-    
-     /**
+
+    /**
      * Get channel's frame
-     * @param chanType the channel type to decode
-     * @param timeslot the timeslot 
-     * @param subslot the subslot
-     * @return the channel frames and information
-     * @throws ChannelError if the argument channel type isn't available/supported
+     *
+     * @param channel the channel
+     * @param currentCell the current cell where 
+     * @param rtlconf the current rtl sdr configuration (same as capture file)
+     * @param key the key and his version (A1/2/3)
      */
-    public Channels getChannelFrame(String chanType, int timeslot, int subslot) 
-            throws ChannelError {
-        registerChannel("combined", new Combined());
-        registerChannel("noncombined", new NonCombined());
-        registerChannel("standalonecontrol", new StandaloneControl());
-        registerChannel("traffic", new Traffic());
-        if(!availableChan.containsKey(chanType)) {
-            throw new ChannelError("Channel type isn't supported");
+    public static void getChannelFrame(Channels channel, Cell currentCell, 
+                                            RtlsdrConf rtlconf, String[] key) {
+        try {
+            channel.start(currentCell, rtlconf, key);
+        } catch(IOException e) {
+            System.err.println("An error occur when trying to extract frammes: \n" + e.getMessage());
         }
-        return availableChan.get(chanType).decode(timeslot, subslot);
     }
 }

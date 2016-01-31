@@ -27,22 +27,30 @@
  */
 package gsm.topguw.channels;
 
+import gsm.topguw.conf.RtlsdrConf;
+import gsm.topguw.generality.Cell;
+import java.io.File;
+
 /**
  * BCCH (Non-combined C0) Channel
  * @author bastien.enjalbert
  */
 public class NonCombined extends Channels{
+    
+    private String chanName = "BCCH";
 
     /**
      * Create an abstract version of a BCCH (Non-Combined channel C0) without any
      * data inside.
      * @param timeslot The timeslot
+     * @param cfile the linked cfile to the channel
      * @param subslot The sub-slot
      */
-    public NonCombined(int timeslot, int subslot) {
+    public NonCombined(int timeslot, int subslot, File cfile) {
         this.timeslot = timeslot;
         this.subslot = subslot;
         this.recordedFrames = null;
+        this.cfile = cfile;
     }
     
     /**
@@ -53,25 +61,30 @@ public class NonCombined extends Channels{
         this.timeslot = -1;
         this.subslot = -1;
         this.recordedFrames = null;
+        this.cfile = null;
     }
     
     /**
      * Initialize BCCH channel without data
      * @param timeslot
      * @param subslot
+     * @param cfile the linked cfile to the channel
      * @return an empty BCCH that wait to be filled (start method)
      */
-    @Override
-    public Channels decode(int timeslot, int subslot) {
-        return new NonCombined(timeslot, subslot);
+    public Channels decode(int timeslot, int subslot, File cfile) {
+        return new NonCombined(timeslot, subslot, cfile);
     }
     
     /**
-     * Get all frame from the channel (BCCH)
+     * Get all frame from the channel (into recordedFrames) on BCCH
+     * 
+     * @param cell the cell where the cfile was captured
+     * @param rtlconf the rtl sdr device configuration
+     * @param key the key and the A5 version (1/2/3)
      */
     @Override
-    public void start() {
-        // TODO : use airprobe_decode.py with a cell, a capture file and rtlsdrconf
+    public void start(Cell cell, RtlsdrConf rtlconf, String[] key) {
+        
     }
     
 }

@@ -27,14 +27,24 @@
  */
 package gsm.topguw.channels;
 
+import gsm.topguw.conf.RtlsdrConf;
+import gsm.topguw.generality.Cell;
 import gsm.topguw.generality.Frame;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 /**
  * Channels implementation for gr-gsm and uses
  * @author root
  */
 public abstract class Channels {
+    
+    /** basic frame regex */
+    public static Pattern RGX_FRAME
+            = Pattern.compile("([0-9]*) ([0-9]*):  (([0-9a-fA-F][0-9a-fA-F] )*([0-9a-fA-F][0-9a-fA-F]))");
+    
    
     
     /** Channels timeslot */
@@ -46,17 +56,38 @@ public abstract class Channels {
     /** Initialized data into Array */
     protected ArrayList<Frame> recordedFrames;
     
+    /** Cfile linked to the channel */
+    protected File cfile;
+    
     /**
      * Return a channel to work on
      * @param timeslot the timeslot
      * @param subslot the sub-slot
      * @return an empty version of the channels (without data)
      */
-    public abstract Channels decode(int timeslot, int subslot);
+    public abstract Channels decode(int timeslot, int subslot, File cfile);
     
     /**
-     * Get all frame from the channel
+     * Get all frame from the channel (into recordedFrames)
+     * @param cell the cell where the cfile was captured
+     * @param rtlconf the rtl sdr device configuration
+     * @param key the key and the A5 version (1/2/3)
+     * @throws IOException 
      */
-    public abstract void start();
+    public abstract void start(Cell cell, RtlsdrConf rtlconf, String[] key) throws IOException;
+
+    /**
+     * @return the recordedFrames
+     */
+    public ArrayList<Frame> getRecordedFrames() {
+        return recordedFrames;
+    }
+
+    /**
+     * @param recordedFrames the recordedFrames to set
+     */
+    public void setRecordedFrames(ArrayList<Frame> recordedFrames) {
+        this.recordedFrames = recordedFrames;
+    }
     
 }
