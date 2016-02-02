@@ -43,14 +43,14 @@ import java.util.regex.Matcher;
  */
 public class Combined extends Channels{
     
-    private String chanName = "BCCH_SDCCH4";
+    private final String chanName = "BCCH_SDCCH4";
 
     /**
-     * Create an abstract version of a BCCH_SDCCH4 (Combined channel C0) without any
-     * data inside.
+     * Create an abstract version of a BCCH_SDCCH4 (Combined channel C0) 
+     * Assign the timeslot, subslot and the capture cfile
      * @param timeslot The timeslot
      * @param subslot The sub-slot
-     * @param cfile the linked cfile to the channel
+     * @param cfile capture cfile
      */
     public Combined(int timeslot, int subslot, File cfile) {
         this.timeslot = timeslot;
@@ -88,7 +88,7 @@ public class Combined extends Channels{
      * @param cell the cell where the cfile was captured
      * @param rtlconf the rtl sdr device configuration
      * @param key the key and the A5 version (1/2/3)
-     * @throws java.io.IOException
+     * @throws IOException with the airprobe_decode process
      */
     @Override
     public void start(Cell cell, RtlsdrConf rtlconf, String[] key) throws IOException {
@@ -97,18 +97,14 @@ public class Combined extends Channels{
         
         ProcessBuilder pb = null;
         
-        try {
-            key[0].length();
-            key[1].length();
-            
-            
+        if(key.length == 2) {
             pb = new ProcessBuilder("airprobe_decode.py", "-m", chanName,
                 "-t", Integer.toString(this.timeslot), "-u",  Integer.toString(this.subslot),
                 "-c", this.cfile.getAbsolutePath(), "-f", cell.getFreq(), "-s", rtlconf.getSamprateStr(),
                 "-k", key[1], "-e", key[0], "-v");
             
             
-        } catch (Exception e) {
+        } else {
             // no key specified
             pb = new ProcessBuilder("airprobe_decode.py", "-m", chanName,
                 "-t", Integer.toString(this.timeslot), "-u",  Integer.toString(this.subslot),
@@ -136,5 +132,9 @@ public class Combined extends Channels{
         p.destroy();
         p.destroyForcibly();
     }
+    
+    /**
+     * 
+     */
     
 }

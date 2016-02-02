@@ -30,14 +30,8 @@ package gsm.topguw.tools;
 import gsm.topguw.conf.RtlsdrConf;
 import gsm.topguw.generality.Cell;
 import gsm.topguw.err.RtlsdrError;
-import static gsm.topguw.tools.Scanner.RGX_KAL;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.regex.Matcher;
 
 /**
  * Capture cfile/bursts file with gr-gsm
@@ -53,10 +47,9 @@ public class Capture {
      * @param dest capture file destination
      * @param conf the rtl_sdr configuration
      * @param cell the cell to capture
-     * @param options : <ul><li> index 0 : arfcn (1 = yes, 0 = frequency)</li>
-     * <li> index 1 : cfile (1 = yes, 0 = bursts file)</li></ul>
-     * @return an arraylist containing GSM tower detected by kal index 1 : freq
-     * (corrected) index 2 : power
+     * @param options : <ul><li> index 0 : (1 = arfcn, 0 = frequency)</li>
+     * <li> index 1 : (1 = cfile, 0 = bursts file)</li></ul>
+     * @return the process of capture 
      * @throws RtlsdrError if RTL-SDR device is not plugged
      * @throws IOException if the process (kal) cannot start
      */

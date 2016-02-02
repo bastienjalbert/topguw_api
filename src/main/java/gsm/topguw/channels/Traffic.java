@@ -27,9 +27,16 @@
  */
 package gsm.topguw.channels;
 
+import static gsm.topguw.channels.Channels.RGX_FRAME;
 import gsm.topguw.conf.RtlsdrConf;
 import gsm.topguw.generality.Cell;
+import gsm.topguw.generality.Frame;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
 
 /**
  * TCHF (Traffic Channel, Full rate) Channel
@@ -37,11 +44,11 @@ import java.io.File;
  */
 public class Traffic extends Channels{
 
-    private String chanName = "TCHF";
+    private final String chanName = "TCHF";
     
     /**
-     * Create an abstract version of a TCHF (Traffic Channel, Full rate) without any
-     * data inside.
+     * Create an abstract version of a TCHF (Traffic Channel, Full rate) 
+     * Assign the timeslot, subslot and the capture cfile
      * @param timeslot The timeslot
      * @param subslot The sub-slot
      * @param cfile the linked cfile to the channel
@@ -82,9 +89,48 @@ public class Traffic extends Channels{
      * @param cell the cell where the cfile was captured
      * @param rtlconf the rtl sdr device configuration
      * @param key the key and the A5 version (1/2/3)
+     * @throws IOException with the airprobe_decode process
      */
     @Override
-    public void start(Cell cell, RtlsdrConf rtlconf, String[] key) {
+    public void start(Cell cell, RtlsdrConf rtlconf, String[] key) throws IOException {
         
+        ArrayList<Frame> frames = new ArrayList<>();
+        
+        ProcessBuilder pb = null;
+        
+        if(key.length == 2) {
+            pb = new ProcessBuilder("airprobe_decode.py", "-m", chanName,
+                "-t", Integer.toString(this.timeslot), "-u",  Integer.toString(this.subslot),
+                "-c", this.cfile.getAbsolutePath(), "-f", cell.getFreq(), "-s", rtlconf.getSamprateStr(),
+                "-k", key[1], "-e", key[0], "-v");
+            
+            
+        } else {
+            // no key specified
+            pb = new ProcessBuilder("airprobe_decode.py", "-m", chanName,
+                "-t", Integer.toString(this.timeslot), "-u",  Integer.toString(this.subslot),
+                "-c", this.cfile.getAbsolutePath(), "-f", cell.getFreq(),"-v");
+            
+        }
+        
+        pb.redirectErrorStream(true);
+        Process p = pb.start();
+
+        p.getOutputStream().flush();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        String ligne;
+        while ((ligne = reader.readLine()) != null) {
+            Matcher m = RGX_FRAME.matcher(ligne);
+            if(m.matches()) {
+                /// extract information and put them into the arraylist
+                // maybe check before parsing fn into String to avoid problem .. ?
+                frames.add(new Frame(Integer.parseInt(m.group(1)), 
+                        Integer.parseInt(m.group(2)), 
+                        m.group(3).split(" ")));
+            }
+        }
+        setRecordedFrames(frames);
+        p.destroy();
+        p.destroyForcibly();
     }
 }

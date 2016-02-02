@@ -52,7 +52,7 @@ public class DecodeTest {
         Decode dec = new Decode();
 
         try {
-            broadcast = dec.getChannel("combined", 0, 0, new File("/root/Bureau/temp/test2.cfile"));
+            broadcast = dec.getChannel("noncombined", 0, 0, new File("/root/Bureau/temp/test2.cfile"));
             broadcast.start(cell, conf, new String[0]);
             for(Frame a : broadcast.getRecordedFrames()) {
                 System.out.println(a.toString() + "\n");

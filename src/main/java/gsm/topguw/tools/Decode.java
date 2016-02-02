@@ -70,13 +70,16 @@ public class Decode {
      */
     public Channels getChannel(String chanType, int timeslot, int subslot, File cfile)
             throws ChannelError {
+       
         registerChannel("combined", new Combined());
         registerChannel("noncombined", new NonCombined());
         registerChannel("standalonecontrol", new StandaloneControl());
         registerChannel("traffic", new Traffic());
+        
         if (!availableChan.containsKey(chanType)) {
             throw new ChannelError("Channel type isn't supported");
         }
+        
         return availableChan.get(chanType).decode(timeslot, subslot, cfile);
     }
 

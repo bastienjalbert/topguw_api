@@ -63,6 +63,7 @@ public abstract class Channels {
      * Return a channel to work on
      * @param timeslot the timeslot
      * @param subslot the sub-slot
+     * @param cfile capture cfile
      * @return an empty version of the channels (without data)
      */
     public abstract Channels decode(int timeslot, int subslot, File cfile);
@@ -72,7 +73,7 @@ public abstract class Channels {
      * @param cell the cell where the cfile was captured
      * @param rtlconf the rtl sdr device configuration
      * @param key the key and the A5 version (1/2/3)
-     * @throws IOException 
+     * @throws IOException with the airprobe_decode process
      */
     public abstract void start(Cell cell, RtlsdrConf rtlconf, String[] key) throws IOException;
 
