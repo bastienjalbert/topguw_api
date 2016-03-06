@@ -33,6 +33,8 @@ import gsm.topguw.err.ChannelError;
 import gsm.topguw.generality.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  *
@@ -52,10 +54,14 @@ public class DecodeTest {
         Decode dec = new Decode();
 
         try {
-            broadcast = dec.getChannel("noncombined", 0, 0, new File("/root/Bureau/temp/test2.cfile"));
+            broadcast = dec.getChannel("standalonecontrol", 0, 0, new File("/root/Bureau/temp/test2.cfile"));
+            // get all frames from the capture
             broadcast.start(cell, conf, new String[0]);
-            for(Frame a : broadcast.getRecordedFrames()) {
-                System.out.println(a.toString() + "\n");
+            Iterator it = broadcast.getRecordedFrames().entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry) it.next();
+                System.out.println(pair.getKey() + " = " + pair.getValue());
+                it.remove(); // avoids a ConcurrentModificationException
             }
         } catch (IOException | ChannelError e) {
             System.err.println(e.getMessage());

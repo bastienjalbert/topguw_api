@@ -68,7 +68,7 @@ public class Decode {
      * @throws ChannelError if the argument channel type isn't
      * available/supported
      */
-    public Channels getChannel(String chanType, int timeslot, int subslot, File cfile)
+    public static Channels getChannel(String chanType, int timeslot, int subslot, File cfile)
             throws ChannelError {
        
         registerChannel("combined", new Combined());
@@ -87,7 +87,7 @@ public class Decode {
      * Get channel's frame
      *
      * @param channel the channel
-     * @param currentCell the current cell where 
+     * @param currentCell the current cell  
      * @param rtlconf the current rtl sdr configuration (same as capture file)
      * @param key the key and his version (A1/2/3)
      */

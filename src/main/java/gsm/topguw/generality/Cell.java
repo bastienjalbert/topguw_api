@@ -27,18 +27,22 @@
  */
 package gsm.topguw.generality;
 
+import static gsm.topguw.tools.Scanner.RGX_KAL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Cell information (band, frequency, arfcn, power)s
+ *
  * @author bastie.enjalbert
  */
 public class Cell {
-    
+
     // List of available bands with gr-gsm
-    private static final List<String> BANDS
-            = Arrays.asList("P-GSM","DCS1800","PCS1900","R-GSM","E-GSM","GSM450","GSM480","GSM850","GSM900");
+    public static final List<String> BANDS
+            = Arrays.asList("P-GSM", "DCS1800", "PCS1900", "R-GSM", "E-GSM", "GSM450", "GSM480", "GSM850", "GSM900");
 
     /**
      * frequency (in Hz)
@@ -49,17 +53,20 @@ public class Cell {
      * ARFCN
      */
     private int arfcn;
-    
+
     /**
      * Intensity, power
      */
     private String power;
-    
-    /** GSM Band */
+
+    /**
+     * GSM Band
+     */
     private String band;
 
     /**
      * Create a cell without any information
+     *
      * @param freq the cell's frequency
      * @param arfcn the cell's arfcn
      * @param band the cell's band
@@ -67,13 +74,14 @@ public class Cell {
      * @throws IllegalArgumentException if an invalid argument try to be pass
      */
     public Cell(String freq, int arfcn, String band, String power) throws IllegalArgumentException {
+
         if (!isFreq(freq)) {
             throw new IllegalArgumentException("Freq argument seems not to be "
                     + "a valide frequency");
-        } else if(arfcn < 0 || arfcn > 1023) {
+        } else if (arfcn < 0 || arfcn > 1023) {
             throw new IllegalArgumentException("ARFCN argument seems not to be "
                     + "a valid ARFCN");
-        } else if(!BANDS.contains(band)) {
+        } else if (!BANDS.contains(band)) {
             throw new IllegalArgumentException("BAND argument seems not to be "
                     + "a valid band");
         }
@@ -102,15 +110,35 @@ public class Cell {
         }
         return true;
     }
-    
+
     /**
-     * 
+     *
      * @return String reprensentation of the cell
      */
     @Override
     public String toString() {
-        return "band : " + this.getBand() + ", freq : " + this.getFreq() + ", arfcn : " 
+        return "band : " + this.getBand() + ", freq : " + this.getFreq() + ", arfcn : "
                 + this.getArfcn() + ", power : " + this.getPower();
+    }
+
+    /**
+     *
+     * @return a Cell from a string format
+     * @param a the string representation of a cell (getted via toString)
+     */
+    public Cell StringTo(String a) {
+        // pattern of toString
+        Pattern cellString
+                = Pattern.compile("band : ([0-9]*), freq : ([0-9]*), arfcn : ([0-9]*), power : ([0-9]*)");
+        
+        Matcher m = cellString.matcher(a);
+        // check for match with pattern and a
+        if (m.matches()) {
+            return new Cell(m.group(1), Integer.parseInt(m.group(2)), m.group(3), m.group(4));
+        } else {
+            return null;
+        }
+
     }
 
     /**
@@ -168,5 +196,5 @@ public class Cell {
     public void setBand(String band) {
         this.band = band;
     }
-    
+
 }

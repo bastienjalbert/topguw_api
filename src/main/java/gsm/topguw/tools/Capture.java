@@ -73,7 +73,6 @@ public class Capture {
                 pb = new ProcessBuilder("airprobe_rtlsdr_capture.py", "-a", Integer.toString(cell.getArfcn()), "-c",
                         dest.getAbsolutePath(), "-p", Integer.toString(conf.getPpm()), "-g", Integer.toString(conf.getGain()),
                         "-s", Long.toString(conf.getSamprate()));
-
             } else { // if == 0
                 pb = new ProcessBuilder("airprobe_rtlsdr_capture.py", "-a", Integer.toString(cell.getArfcn()), "-b",
                         dest.getAbsolutePath(), "-p", Integer.toString(conf.getPpm()), "-g", Integer.toString(conf.getGain()),

@@ -36,19 +36,22 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 
 /**
  * SDCCH8 (Stand-alone control channel) Channel
+ *
  * @author bastien.enjalbert
  */
-public class StandaloneControl extends Channels{
-    
+public class StandaloneControl extends Channels {
+
     private final String chanName = "SDCCH8";
 
     /**
-     * Create an abstract version of a SDCCH8 (Stand-alone control channel) 
+     * Create an abstract version of a SDCCH8 (Stand-alone control channel)
      * Assign the timeslot, subslot and the capture cfile
+     *
      * @param timeslot The timeslot
      * @param subslot The sub-slot
      * @param cfile the linked cfile to the channel
@@ -59,10 +62,10 @@ public class StandaloneControl extends Channels{
         this.recordedFrames = null;
         this.cfile = cfile;
     }
-    
+
     /**
-     * Create an abstract version of a SDCCH8 (Stand-alone control channel) without any
-     * data inside.
+     * Create an abstract version of a SDCCH8 (Stand-alone control channel)
+     * without any data inside.
      */
     public StandaloneControl() {
         this.timeslot = -1;
@@ -70,9 +73,10 @@ public class StandaloneControl extends Channels{
         this.recordedFrames = null;
         this.cfile = null;
     }
-    
+
     /**
      * Initialize SDCCH8 channel without data
+     *
      * @param timeslot
      * @param subslot
      * @param cfile the linked cfile to the channel
@@ -80,12 +84,12 @@ public class StandaloneControl extends Channels{
      */
     @Override
     public Channels decode(int timeslot, int subslot, File cfile) {
-        return new NonCombined(timeslot, subslot, cfile);
+        return new StandaloneControl(timeslot, subslot, cfile);
     }
-    
+
     /**
      * Get all frame from the channel (into recordedFrames) on SDCCH8
-     * 
+     *
      * @param cell the cell where the cfile was captured
      * @param rtlconf the rtl sdr device configuration
      * @param key the key and the A5 version (1/2/3)
@@ -93,26 +97,25 @@ public class StandaloneControl extends Channels{
      */
     @Override
     public void start(Cell cell, RtlsdrConf rtlconf, String[] key) throws IOException {
-        
-        ArrayList<Frame> frames = new ArrayList<>();
-        
+
+        HashMap<Integer, Frame> frames = new HashMap<>();
+
         ProcessBuilder pb = null;
-        
-        if(key.length == 2) {
+
+        if (key.length == 2) {
             pb = new ProcessBuilder("airprobe_decode.py", "-m", chanName,
-                "-t", Integer.toString(this.timeslot), "-u",  Integer.toString(this.subslot),
-                "-c", this.cfile.getAbsolutePath(), "-f", cell.getFreq(), "-s", rtlconf.getSamprateStr(),
-                "-k", key[1], "-e", key[0], "-v");
-            
-            
+                    "-t", Integer.toString(this.timeslot), "-u", Integer.toString(this.subslot),
+                    "-c", this.cfile.getAbsolutePath(), "-f", cell.getFreq(),
+                    "-k", key[1], "-e", key[0], "-v");
+
         } else {
             // no key specified
             pb = new ProcessBuilder("airprobe_decode.py", "-m", chanName,
-                "-t", Integer.toString(this.timeslot), "-u",  Integer.toString(this.subslot),
-                "-c", this.cfile.getAbsolutePath(), "-f", cell.getFreq(),"-v");
-            
+                    "-t", Integer.toString(this.timeslot), "-u", Integer.toString(this.subslot),
+                    "-c", this.cfile.getAbsolutePath(), "-f", cell.getFreq(), "-v");
+
         }
-        
+
         pb.redirectErrorStream(true);
         Process p = pb.start();
 
@@ -121,11 +124,11 @@ public class StandaloneControl extends Channels{
         String ligne;
         while ((ligne = reader.readLine()) != null) {
             Matcher m = RGX_FRAME.matcher(ligne);
-            if(m.matches()) {
+            if (m.matches()) {
                 /// extract information and put them into the arraylist
                 // maybe check before parsing fn into String to avoid problem .. ?
-                frames.add(new Frame(Integer.parseInt(m.group(1)), 
-                        Integer.parseInt(m.group(2)), 
+                frames.put(Integer.parseInt(m.group(1)), new Frame(Integer.parseInt(m.group(1)),
+                        Integer.parseInt(m.group(2)),
                         m.group(3).split(" ")));
             }
         }
@@ -133,4 +136,26 @@ public class StandaloneControl extends Channels{
         p.destroy();
         p.destroyForcibly();
     }
+
+    /**
+     * Found system information type 5
+     *
+     * @return frame number of si5 or empty arraylist if neither found
+     */
+    /*public ArrayList<Integer> findSI5() {
+        
+        // list of ia found
+        ArrayList<Integer> ia = new ArrayList<>();
+        // number of ia found
+        int i = 0;
+        
+        for(Frame f : recordedFrames) {
+            // 0x063f <=> immediate assignment
+            if(f.getData()[1].equals("06") && f.getData()[2].equals("3f")) {
+                ia.add(f.getFn());
+                i++;
+            }
+        }
+        return ia;
+    }*/
 }

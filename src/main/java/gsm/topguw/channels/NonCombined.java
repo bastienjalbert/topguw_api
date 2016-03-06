@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 
 /**
@@ -93,7 +94,7 @@ public class NonCombined extends Channels{
     @Override
     public void start(Cell cell, RtlsdrConf rtlconf, String[] key) throws IOException {
         
-        ArrayList<Frame> frames = new ArrayList<>();
+        HashMap<Integer, Frame> frames = new HashMap<>();
         
         ProcessBuilder pb = null;
         
@@ -108,7 +109,8 @@ public class NonCombined extends Channels{
             // no key specified
             pb = new ProcessBuilder("airprobe_decode.py", "-m", chanName,
                 "-t", Integer.toString(this.timeslot), "-u",  Integer.toString(this.subslot),
-                "-c", this.cfile.getAbsolutePath(), "-f", cell.getFreq(),"-v");
+                "-c", this.cfile.getAbsolutePath(), "-s", rtlconf.getSamprateStr(),
+                    "-f", cell.getFreq(),"-v");
             
         }
         
@@ -118,16 +120,21 @@ public class NonCombined extends Channels{
         p.getOutputStream().flush();
         BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         String ligne;
+        int i = 0;
+        int j = 0;
         while ((ligne = reader.readLine()) != null) {
             Matcher m = RGX_FRAME.matcher(ligne);
             if(m.matches()) {
                 /// extract information and put them into the arraylist
                 // maybe check before parsing fn into String to avoid problem .. ?
-                frames.add(new Frame(Integer.parseInt(m.group(1)), 
+                frames.put(Integer.parseInt(m.group(1)), new Frame(Integer.parseInt(m.group(1)), 
                         Integer.parseInt(m.group(2)), 
                         m.group(3).split(" ")));
+                j++;
             }
+            i++;
         }
+        System.out.println("en tout : " + i + " , correcte : " +j);
         setRecordedFrames(frames);
         p.destroy();
         p.destroyForcibly();

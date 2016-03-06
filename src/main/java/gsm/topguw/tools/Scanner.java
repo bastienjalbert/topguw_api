@@ -92,7 +92,7 @@ public class Scanner {
                 Integer.toString(conf.getGain()), "-e", Integer.toString(conf.getPpm()));
         pb.redirectErrorStream(true);
         Process p = pb.start();
-
+        
         p.getOutputStream().flush();
         BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         // capture line from standard output from kal execution

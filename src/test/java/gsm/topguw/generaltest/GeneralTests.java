@@ -1,4 +1,4 @@
-/* Channels.java - 15 janv. 2016  -  UTF-8 - 
+/* GeneralTests.java - 2 févr. 2016  -  UTF-8 - 
  * --------------------------------- DISCLAMER ---------------------------------
  * Copyright (c) 2015, Bastien Enjalbert All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -25,70 +25,52 @@
  * policies, either expressed or implied, of the FreeBSD Project.
  * @author Bastien Enjalbert
  */
-package gsm.topguw.channels;
+package gsm.topguw.generaltest;
 
+import gsm.topguw.channels.*;
 import gsm.topguw.conf.RtlsdrConf;
+import gsm.topguw.err.ChannelError;
 import gsm.topguw.generality.Cell;
 import gsm.topguw.generality.Frame;
+import gsm.topguw.tools.Decode;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
- * Channels implementation for gr-gsm and uses
+ *
  * @author root
  */
-public abstract class Channels {
-    
-    /** basic frame regex */
-    public static Pattern RGX_FRAME
-            = Pattern.compile("([0-9]*) ([0-9]*):  (([0-9a-fA-F][0-9a-fA-F] )*([0-9a-fA-F][0-9a-fA-F]))");
-    
-   
-    
-    /** Channels timeslot */
-    protected int timeslot;
-    
-    /** Channels subslot */
-    protected int subslot;
-    
-    /** Initialized data into Array (fn as key, and the all frame) */
-    protected HashMap<Integer, Frame> recordedFrames;
-    
-    /** Cfile linked to the channel */
-    protected File cfile;
-    
-    /**
-     * Return a channel to work on
-     * @param timeslot the timeslot
-     * @param subslot the sub-slot
-     * @param cfile capture cfile
-     * @return an empty version of the channels (without data)
-     */
-    public abstract Channels decode(int timeslot, int subslot, File cfile);
-    
-    /**
-     * Get all frame from the channel (into recordedFrames)
-     * @param cell the cell where the cfile was captured
-     * @param rtlconf the rtl sdr device configuration
-     * @param key the key and the A5 version (1/2/3)
-     * @throws IOException with the airprobe_decode process
-     */
-    public abstract void start(Cell cell, RtlsdrConf rtlconf, String[] key) throws IOException;
+public class GeneralTests {
 
-    /**
-     * @return the recordedFrames
-     */
-    public HashMap<Integer, Frame> getRecordedFrames() {
-        return recordedFrames;
+    public static void main(String[] args) {
+        // cell
+        Cell cell = new Cell("951360000", 121, "GSM900", "152200");
+        // rtl conf
+        RtlsdrConf conf = new RtlsdrConf(0, 1000000, 0);
+
+        // channel
+        Channels broadcast = null;
+
+        Decode dec = new Decode();
+
+        try {
+            broadcast = dec.getChannel("combined", 0, 0, new File("/root/Bureau/temp/test2.cfile"));
+            broadcast.start(cell, conf, new String[0]);
+            Iterator it = broadcast.getRecordedFrames().entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry) it.next();
+                System.out.println(pair.getKey() + " = " + pair.getValue());
+                it.remove(); // avoids a ConcurrentModificationException
+            }
+            // trying accessing frame with frame number : 2153976
+            System.out.println(broadcast.getRecordedFrames().get(new Integer(2153976)));
+        } catch (IOException | ChannelError e) {
+            System.err.println(e.getMessage());
+        }
     }
 
-    /**
-     * @param recordedFrames the recordedFrames to set
-     */
-    public void setRecordedFrames(HashMap<Integer, Frame> recordedFrames) {
-        this.recordedFrames = recordedFrames;
-    }
-    
 }

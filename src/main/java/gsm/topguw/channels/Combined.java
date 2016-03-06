@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 
 /**
@@ -93,7 +94,7 @@ public class Combined extends Channels{
     @Override
     public void start(Cell cell, RtlsdrConf rtlconf, String[] key) throws IOException {
         
-        ArrayList<Frame> frames = new ArrayList<>();
+        HashMap<Integer, Frame> frames = new HashMap<>();
         
         ProcessBuilder pb = null;
         
@@ -123,7 +124,7 @@ public class Combined extends Channels{
             if(m.matches()) {
                 /// extract information and put them into the arraylist
                 // maybe check before parsing fn into String to avoid problem .. ?
-                frames.add(new Frame(Integer.parseInt(m.group(1)), 
+                frames.put(Integer.parseInt(m.group(1)), new Frame(Integer.parseInt(m.group(1)), 
                         Integer.parseInt(m.group(2)), 
                         m.group(3).split(" ")));
             }
@@ -132,9 +133,4 @@ public class Combined extends Channels{
         p.destroy();
         p.destroyForcibly();
     }
-    
-    /**
-     * 
-     */
-    
 }
