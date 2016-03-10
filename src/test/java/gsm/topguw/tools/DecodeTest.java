@@ -51,10 +51,8 @@ public class DecodeTest {
         // channel
         Channels broadcast = null;
 
-        Decode dec = new Decode();
-
         try {
-            broadcast = dec.getChannel("standalonecontrol", 0, 0, new File("/root/Bureau/temp/test2.cfile"));
+            broadcast = Decode.getChannel("standalonecontrol", 0, 0, new File("/root/Bureau/temp/test2.cfile"));
             // get all frames from the capture
             broadcast.start(cell, conf, new String[0]);
             Iterator it = broadcast.getRecordedFrames().entrySet().iterator();

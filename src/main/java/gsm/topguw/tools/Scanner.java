@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -84,12 +85,32 @@ public class Scanner {
      */
     public static ArrayList<Cell> getGsmCells(String whichGsm, RtlsdrConf conf) 
                                                throws RtlsdrError, IOException {
+        
         // Will contains gsm cells found
         ArrayList<Cell> gsmCells = new ArrayList<>();
+        
+        // initialise variable
+        String gain =  Integer.toString(conf.getGain());
+        String ppm =  Integer.toString(conf.getPpm());
+        
+        List<String> processArgs = new ArrayList<>();
 
-        // start the kal command
-        ProcessBuilder pb = new ProcessBuilder("kal", "-s", whichGsm, "-g", 
-                Integer.toString(conf.getGain()), "-e", Integer.toString(conf.getPpm()));
+        // prepare the process kal
+        processArgs.add("kal");
+        processArgs.add("-s");
+        processArgs.add(whichGsm);
+        // make sure that ppm is specified
+        if(ppm.length() != 0) {
+            processArgs.add("-e");
+            processArgs.add(ppm);
+        }
+        if(gain.length() != 0 ) {
+            processArgs.add("-g");
+            processArgs.add(gain);
+        }
+
+        // start the kal command <=> TODO : test (not yet tested)
+        ProcessBuilder pb = new ProcessBuilder(processArgs);
         pb.redirectErrorStream(true);
         Process p = pb.start();
         
@@ -98,7 +119,7 @@ public class Scanner {
         // capture line from standard output from kal execution
         String line = new String();
         while ((line = reader.readLine()) != null) {
-            // if there is not RTL_SDR detected
+            // if there is not RTL_SDR detected -> TODO : add mor error code from kal
             if (line.equals("No supported devices found.")) {
                 throw new RtlsdrError("Please plug-in your RTL-SDR device (not detected).");
             }

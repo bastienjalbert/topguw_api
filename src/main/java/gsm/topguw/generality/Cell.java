@@ -126,7 +126,7 @@ public class Cell {
      * @return a Cell from a string format
      * @param a the string representation of a cell (getted via toString)
      */
-    public Cell StringTo(String a) {
+    public static Cell stringTo(String a) {
         // pattern of toString
         Pattern cellString
                 = Pattern.compile("band : ([0-9]*), freq : ([0-9]*), arfcn : ([0-9]*), power : ([0-9]*)");
