@@ -46,4 +46,17 @@ Thread.sleep(30000);
 result.destroy();
 result.destroyForcibly();
 ```
+Finaly you can scan cells around yourself
+```java 
+// specify information about the scan, gsm bands are same as kalibrate-rtl actually,
+// note : you can uses more bands with the Decoder (all bands are in Cell class)
+String whichGsm = "GSM900";
+RtlsdrConf conf = new RtlsdrConf();
+// start the scan and stored Cell object into result
+ArrayList<Cell> result = Scanner.scanForCell(whichGsm, conf);
+// display founded cells informations
+result.stream().forEach((aCell) -> {
+  System.out.println(aCell.toString());
+});
+```
 # Version 0.1 initial
