@@ -2,6 +2,8 @@
 Topguw implement Gr-gsm tools in Java and makes possible to uses gsm datas directly from Java
 
 # Examples 
+Don't forget to import needed classes
+
 You can easily extract all frames from a specific channel/timeslot/subslot (Decode module)
 ```java 
 // set which cell you are working on 
@@ -26,7 +28,7 @@ System.out.println(broadcast.getRecordedFrames().get(new Integer(2153976)));
   System.err.println(e.getMessage());
 }
 ```
-You can also capture data with your own RTL-SDR device
+You can also capture data with your own RTL-SDR device (Capture module)
 ```java 
 // specify the destination file where frames will be stored  
 File dest = new File("/root/sniffing-capturing.test");
@@ -46,7 +48,7 @@ Thread.sleep(30000);
 result.destroy();
 result.destroyForcibly();
 ```
-Finaly you can scan cells around yourself
+Finaly you can scan cells around yourself (Scanner module)
 ```java 
 // specify information about the scan, gsm bands are same as kalibrate-rtl actually,
 // note : you can uses more bands with the Decoder (all bands are in Cell class)
