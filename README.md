@@ -1,5 +1,8 @@
 # topguw_api
-Topguw implement Gr-gsm tools in Java and makes possible to uses gsm datas directly from Java
+Topguw implement Gr-gsm tools in Java and makes possible to use gsm datas directly from Java
+
+# Version 0.1 initial
+First version, still need improvment !
 
 # Examples 
 Don't forget to import needed classes
@@ -59,6 +62,4 @@ ArrayList<Cell> result = Scanner.scanForCell(whichGsm, conf);
 // display founded cells informations
 result.stream().forEach((aCell) -> {
   System.out.println(aCell.toString());
-});
-```
-# Version 0.1 initial
+}); 
