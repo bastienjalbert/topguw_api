@@ -1,5 +1,5 @@
 # topguw_api
-Topguw implement Gr-gsm tools in Java and makes possible to use gsm datas directly from Java
+Topguw implements Gr-gsm tools in Java and makes possible to use gsm datas directly from Java
 
 # Version 0.1 initial
 First version, still need improvment !
